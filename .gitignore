@@ -1,0 +1,15 @@
+# SwiftPM build cache (large, machine-specific absolute paths)
+.build/
+# App bundle and CLI produced by scripts/build-app.sh
+build/
+# Xcode / SwiftPM per-user state
+.swiftpm/
+*.xcuserstate
+xcuserdata/
+DerivedData/
+# macOS
+.DS_Store
+# Local databases from experiments (ATHENA_DB=...)
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
