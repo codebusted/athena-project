@@ -41,6 +41,10 @@ final class DashboardViewModel {
     var monthAnchor = Date()
     /// Tallest the window's content may be on its current screen (set by the app delegate).
     var maxContentHeight: CGFloat = 800
+    // Measured layout heights. Kept here rather than in SwiftUI `@State`, which is a compiler macro in newer
+    // SDKs and needs Xcode's macro plugins; the Command Line Tools alone can't build it.
+    var chromeHeight: CGFloat = 0
+    var pageContentHeight: CGFloat = 0
     var errorMessage: String?
     var showingLearnings = false
 

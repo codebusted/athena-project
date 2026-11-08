@@ -75,7 +75,8 @@ struct JavaChallengeCardView: View {
         switch model.phase {
         case .selfGrade(let evaluation): SelfGradeView(evaluation: evaluation, model: model)
         case .feedback(let evaluation):
-            FeedbackView(evaluation: evaluation, revisionNote: model.revisionNote) { model.practiceAnother() }
+            FeedbackView(evaluation: evaluation, revisionNote: model.revisionNote,
+                         detailsHeight: $model.detailsContentHeight) { model.practiceAnother() }
         default: EmptyView()
         }
     }
@@ -133,6 +134,7 @@ struct FeedbackView: View {
 
     let evaluation: Evaluation
     let revisionNote: String?
+    @Binding var detailsHeight: CGFloat
     let onPracticeAnother: () -> Void
 
     var body: some View {
@@ -147,7 +149,7 @@ struct FeedbackView: View {
                 Spacer()
                 Text(methodLabel).font(Theme.small).foregroundStyle(Theme.tertiary)
             }
-            FittingScrollView(maxHeight: Self.detailsMaxHeight) {
+            FittingScrollView(maxHeight: Self.detailsMaxHeight, contentHeight: $detailsHeight) {
                 VStack(alignment: .leading, spacing: 12) {
                     if !evaluation.feedback.isEmpty, evaluation.feedback != "Correct." {
                         Text(evaluation.feedback).font(Theme.body).foregroundStyle(Theme.text)
@@ -202,12 +204,12 @@ struct FeedbackView: View {
 
 struct SelfGradeView: View {
     let evaluation: Evaluation
-    let model: ChallengeViewModel
+    @Bindable var model: ChallengeViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text(evaluation.feedback).font(Theme.body).foregroundStyle(Theme.amber).fixedSize(horizontal: false, vertical: true)
-            FittingScrollView(maxHeight: FeedbackView.detailsMaxHeight) {
+            FittingScrollView(maxHeight: FeedbackView.detailsMaxHeight, contentHeight: $model.detailsContentHeight) {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("REFERENCE ANSWER").font(Theme.label).foregroundStyle(Theme.secondary).tracking(1)
                     CodeBlock(code: evaluation.correctAnswer)

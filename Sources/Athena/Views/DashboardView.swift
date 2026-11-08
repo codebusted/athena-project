@@ -15,8 +15,6 @@ struct DashboardView: View {
     var scrolls = true
     /// Reports the natural content height so the window can be sized to fit it.
     var onContentHeightChange: ((CGFloat) -> Void)?
-    /// Measured height of the header and footer, which always stay visible.
-    @State private var chromeHeight: CGFloat = 0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -26,7 +24,7 @@ struct DashboardView: View {
                 .padding(.bottom, 18)
                 .background(measureChrome)
             if scrolls {
-                FittingScrollView(maxHeight: maxPageHeight) { page }
+                FittingScrollView(maxHeight: maxPageHeight, contentHeight: $model.pageContentHeight) { page }
             } else {
                 page
             }
@@ -36,7 +34,7 @@ struct DashboardView: View {
                 .padding(.bottom, 48)
                 .background(measureChrome)
         }
-        .onPreferenceChange(ChromeHeightKey.self) { chromeHeight = $0 }
+        .onPreferenceChange(ChromeHeightKey.self) { model.chromeHeight = $0 }
         .font(Theme.body)
         .background(GeometryReader { Color.clear.preference(key: ContentHeightKey.self, value: $0.size.height) })
         .onPreferenceChange(ContentHeightKey.self) { onContentHeightChange?($0) }
@@ -49,7 +47,7 @@ struct DashboardView: View {
     }
 
     /// Whatever the screen allows after the header and footer; anything longer (e.g. Java feedback) scrolls.
-    private var maxPageHeight: CGFloat { max(model.maxContentHeight - chromeHeight, 200) }
+    private var maxPageHeight: CGFloat { max(model.maxContentHeight - model.chromeHeight, 200) }
 
     private var measureChrome: some View {
         GeometryReader { Color.clear.preference(key: ChromeHeightKey.self, value: $0.size.height) }
@@ -136,10 +134,11 @@ private struct ScrollContentHeightKey: PreferenceKey {
 }
 
 /// A ScrollView that is exactly as tall as its content, up to `maxHeight`, so it has a natural height.
+/// The measured height is stored by the caller (a view-model property) instead of `@State`; see DashboardViewModel.
 struct FittingScrollView<Content: View>: View {
     let maxHeight: CGFloat
+    @Binding var contentHeight: CGFloat
     @ViewBuilder var content: Content
-    @State private var contentHeight: CGFloat = 0
 
     var body: some View {
         ScrollView {

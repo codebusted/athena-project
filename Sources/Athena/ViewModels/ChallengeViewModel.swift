@@ -27,6 +27,8 @@ final class ChallengeViewModel {
     /// True once today's mandatory exercise is done and the user asked for another one.
     private(set) var isExtraPractice = false
     var answer = ""
+    /// Measured height of the scrollable feedback details (see DashboardViewModel for why this isn't `@State`).
+    var detailsContentHeight: CGFloat = 0
 
     var onRecorded: (() -> Void)?
 

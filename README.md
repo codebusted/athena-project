@@ -77,8 +77,10 @@ Athena has no third-party code dependencies. SQLite ships with macOS.
 
 ## Installation
 
-### 1. Install a Swift toolchain
-If you have Xcode, open it once to accept the license. Otherwise, install the Command Line Tools:
+### 1. Install a Swift toolchain (to build Athena; not needed to run it)
+Athena is shared as source, so it's compiled once on your Mac. After that, the app runs on its own;
+the Swift runtime is part of macOS. If you have Xcode, open it once to accept the license. Otherwise,
+install the Command Line Tools:
 ```bash
 xcode-select --install
 ```
@@ -251,6 +253,7 @@ SwiftUI views ── view models ── AthenaStore (application layer)
 | "Couldn't change the login item" | The app must be in `~/Applications` or `/Applications`; use `--install` |
 | Build fails with "precompiled file … was compiled with module cache path …" | You moved or copied the folder; run `rm -rf .build` and build again |
 | `no such module 'Testing'` when running tests | Use `./scripts/test.sh`, which adds the paths the Command Line Tools need |
+| `plugin for module 'SwiftUIMacros' not found` | Fixed in current code (it no longer uses SwiftUI's `@State` macro, which needs Xcode on newer SDKs). Update to the latest source; or build with Xcode's toolchain: `sudo xcode-select -s /Applications/Xcode.app` |
 
 ---
 
