@@ -131,6 +131,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             window.backgroundColor = .black
             window.appearance = NSAppearance(named: .darkAqua)
             window.isReleasedWhenClosed = false
+            // Appear wherever the user is: on every desktop (Space), and on top of full-screen apps,
+            // instead of only on the main desktop.
+            window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
             let hosting = NSHostingView(rootView: root)
             // Athena sizes the window itself (fitWindow); don't let SwiftUI push the window past the screen.
             hosting.sizingOptions = []
